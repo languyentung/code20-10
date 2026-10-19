@@ -19,6 +19,109 @@ function rain() {
 
 setInterval(rain, reduceMotion ? 400 : 70);
 
+// ---------- Wishes ----------
+const wishes = {
+    'phu-nu': {
+        to: 'Gửi một nửa thế giới',
+        list: [
+            'Chúc một nửa thế giới luôn xinh đẹp, hạnh phúc và rạng rỡ như những vì sao ✨',
+            'Chúc bạn luôn tự tin là chính mình, sống điều mình thích và được yêu thương đúng cách 💗',
+            'Mong mỗi ngày của bạn đều có nắng, có hoa, có tiếng cười và những người luôn trân trọng bạn 🌷',
+            'Chúc bạn thật khỏe, công việc suôn sẻ và luôn có thời gian để chăm sóc cho chính mình 🌸',
+            'Phụ nữ không cần hoàn hảo, chỉ cần hạnh phúc. Chúc bạn một ngày 20/10 thật ngọt ngào 💖',
+            'Cảm ơn những người phụ nữ đã làm cho thế giới này dịu dàng và ấm áp hơn mỗi ngày 🌹'
+        ]
+    },
+    'me': {
+        to: 'Gửi Mẹ yêu',
+        list: [
+            'Con chúc mẹ luôn mạnh khỏe, bình an và lúc nào cũng nở nụ cười. Con yêu mẹ nhiều lắm! 💐',
+            'Cảm ơn mẹ vì những bữa cơm, những đêm thức khuya và tình thương không bao giờ cạn. Hôm nay mẹ nghỉ ngơi thật nhiều nhé 💗',
+            'Mẹ là người phụ nữ tuyệt vời nhất đời con. Chúc mẹ một ngày 20/10 thật vui và thật hạnh phúc 🌷',
+            'Dù con có lớn đến đâu, mẹ vẫn là nơi bình yên nhất. Con chúc mẹ sống vui, sống khỏe bên con thật lâu 🏡',
+            'Hôm nay mẹ không phải lo gì hết, để con lo! Chúc mẹ 20/10 thật trọn vẹn 💖',
+            'Mỗi sợi tóc bạc của mẹ là một lần mẹ hy sinh vì con. Con thương mẹ nhiều hơn những gì con nói được 🌹'
+        ]
+    },
+    'chi': {
+        to: 'Gửi chị gái của em',
+        list: [
+            'Chúc chị gái của em luôn xinh đẹp, giỏi giang và gặp toàn chuyện vui. 20/10 vui vẻ nha chị! 🎀',
+            'Cảm ơn chị vì đã luôn nhường em, bảo vệ em và lắng nghe em. Chúc chị luôn thật hạnh phúc 💗',
+            'Có chị là có thêm một người mẹ thứ hai. Em chúc chị khỏe mạnh, công việc thuận lợi và luôn được yêu thương 🌸',
+            'Chúc chị một năm thật rực rỡ, ví lúc nào cũng dày và nụ cười lúc nào cũng tươi 💸✨',
+            'Dù hay cãi nhau nhưng em thương chị nhất. Chúc chị một ngày 20/10 thật ngọt ngào 💖',
+            'Chúc chị luôn tự tin bước tới những điều chị mong muốn, em luôn ở đây ủng hộ chị 🌷'
+        ]
+    }
+};
+
+const toEl = document.getElementById('to');
+const msgEl = document.getElementById('msg');
+const tabs = document.querySelectorAll('.tab');
+const toast = document.getElementById('toast');
+let current = 'phu-nu';
+let index = 0;
+
+// link format: #me-2 opens the 3rd wish for Mẹ
+const linked = location.hash.match(/^#([a-z-]+?)(?:-(\d+))?$/);
+if (linked && wishes[linked[1]]) {
+    current = linked[1];
+    index = (+linked[2] || 0) % wishes[current].list.length;
+}
+
+function render(animate) {
+    const apply = () => {
+        toEl.textContent = wishes[current].to;
+        msgEl.textContent = wishes[current].list[index];
+        toEl.classList.remove('out');
+        msgEl.classList.remove('out');
+    };
+    tabs.forEach((t) => t.setAttribute('aria-selected', t.dataset.to === current));
+    if (!animate || reduceMotion) return apply();
+    toEl.classList.add('out');
+    msgEl.classList.add('out');
+    setTimeout(apply, 350);
+}
+
+tabs.forEach((t) => t.addEventListener('click', () => {
+    if (t.dataset.to === current) return;
+    current = t.dataset.to;
+    index = 0;
+    render(true);
+}));
+
+document.getElementById('next').addEventListener('click', () => {
+    index = (index + 1) % wishes[current].list.length;
+    render(true);
+});
+
+function showToast(text) {
+    toast.textContent = text;
+    toast.classList.add('show');
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+document.getElementById('share').addEventListener('click', async () => {
+    const url = location.href.split('#')[0] + '#' + current + '-' + index;
+    const text = wishes[current].to + ': ' + wishes[current].list[index];
+    if (navigator.share) {
+        try {
+            await navigator.share({ title: "Happy Women's Day 20/10", text, url });
+        } catch (err) { /* user closed the share sheet */ }
+        return;
+    }
+    try {
+        await navigator.clipboard.writeText(text + '\n' + url);
+        showToast('Đã sao chép lời chúc và link 💌');
+    } catch (err) {
+        showToast('Không sao chép được, bạn copy link trên thanh địa chỉ nhé');
+    }
+});
+
+render(false);
+
 // ---------- Sparkling sky (canvas) ----------
 const canvas = document.getElementById('sky');
 const ctx = canvas.getContext('2d');

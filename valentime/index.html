@@ -3,9 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#07040f">
     <title>Happy Women's Day 20/10</title>
-    <meta name="description" content="Chúc mừng ngày Phụ nữ Việt Nam 20/10">
+    <meta name="description" content="Gửi lời chúc 20/10 đến mẹ, chị gái và những người phụ nữ thân yêu">
+    <meta property="og:title" content="Happy Women's Day 20/10 💖">
+    <meta property="og:description" content="Một lời chúc nhỏ gửi đến những người phụ nữ thân yêu nhân ngày 20/10">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Be+Vietnam+Pro:wght@300;400;500&display=swap" rel="stylesheet">
@@ -29,10 +32,26 @@
         <section class="card">
             <p class="eyebrow">20 · 10 · 2026</p>
             <h1 class="title">Happy Women's Day</h1>
-            <p class="msg">Chúc một nửa thế giới luôn xinh đẹp, hạnh phúc và rạng rỡ như những vì sao ✨</p>
+
+            <div class="tabs" role="tablist" aria-label="Chọn người nhận">
+                <button class="tab" role="tab" data-to="phu-nu">🌸 Phụ nữ</button>
+                <button class="tab" role="tab" data-to="me">💐 Mẹ</button>
+                <button class="tab" role="tab" data-to="chi">🎀 Chị gái</button>
+            </div>
+
+            <p class="to" id="to"></p>
+            <p class="msg" id="msg" aria-live="polite"></p>
+
+            <div class="actions">
+                <button class="btn primary" id="next">💌 Lời chúc khác</button>
+                <button class="btn" id="share">🔗 Gửi lời chúc</button>
+            </div>
+
             <p class="hint">Chạm vào màn hình để thả tim 💖</p>
         </section>
     </main>
+
+    <div class="toast" id="toast" role="status"></div>
 
     <script src="script.js"></script>
 </body>
