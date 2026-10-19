@@ -6,17 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#07040f">
     <title>Happy Women's Day 20/10</title>
-    <meta name="description" content="Gửi lời chúc 20/10 đến mẹ, chị gái và những người phụ nữ thân yêu">
-    <meta property="og:title" content="Happy Women's Day 20/10 💖">
-    <meta property="og:description" content="Một lời chúc nhỏ gửi đến những người phụ nữ thân yêu nhân ngày 20/10">
+    <meta name="description" content="Có một món quà 20/10 đang chờ bạn mở 🎁">
+    <meta property="og:title" content="🎁 Có một món quà 20/10 dành cho bạn">
+    <meta property="og:description" content="Chạm để mở quà và đọc lời chúc dành riêng cho bạn 💖">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Be+Vietnam+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <canvas id="sky"></canvas>
+
+    <!-- Gift intro -->
+    <div class="gift-screen" id="gift">
+        <p class="gift-hello" id="giftHello">Có một món quà dành cho bạn</p>
+        <p class="gift-sub" id="giftSub">nhân ngày 20/10 🎁</p>
+        <button class="gift-box" id="giftBox" aria-label="Mở hộp quà">
+            <span class="lid"><span class="bow"></span></span>
+            <span class="box"></span>
+        </button>
+        <p class="gift-hint">Chạm vào hộp quà để mở</p>
+    </div>
+
+    <button class="sound" id="sound" aria-label="Bật/tắt nhạc" hidden>🔊</button>
 
     <main class="scene">
         <div class="cloud-wrap">
@@ -29,27 +42,94 @@
             <div class="rain"></div>
         </div>
 
-        <section class="card">
+        <section class="card" id="card">
             <p class="eyebrow">20 · 10 · 2026</p>
             <h1 class="title">Happy Women's Day</h1>
 
-            <div class="tabs" role="tablist" aria-label="Chọn người nhận">
+            <div class="tabs" id="tabs" role="tablist" aria-label="Chọn người nhận">
                 <button class="tab" role="tab" data-to="phu-nu">🌸 Phụ nữ</button>
                 <button class="tab" role="tab" data-to="me">💐 Mẹ</button>
                 <button class="tab" role="tab" data-to="chi">🎀 Chị gái</button>
+                <button class="tab" role="tab" data-to="nguoi-yeu">💘 Người yêu</button>
             </div>
 
             <p class="to" id="to"></p>
             <p class="msg" id="msg" aria-live="polite"></p>
+            <p class="from" id="from"></p>
 
             <div class="actions">
-                <button class="btn primary" id="next">💌 Lời chúc khác</button>
-                <button class="btn" id="share">🔗 Gửi lời chúc</button>
+                <button class="btn primary" id="secret">💌 Mở lời nhắn bí mật</button>
+                <button class="btn" id="next">🔄 Lời chúc khác</button>
+                <button class="btn" id="create">✍️ Tạo thiệp gửi người thương</button>
             </div>
 
             <p class="hint">Chạm vào màn hình để thả tim 💖</p>
         </section>
     </main>
+
+    <!-- Catch-hearts game -->
+    <div class="game" id="game" hidden>
+        <p class="game-hud"><span id="caught">0</span> / 10 💘</p>
+        <p class="game-tip">Bắt đủ 10 trái tim để mở lời nhắn bí mật</p>
+    </div>
+
+    <!-- Secret message -->
+    <div class="modal" id="secretModal" role="dialog" aria-modal="true" aria-labelledby="secretTitle" hidden>
+        <div class="sheet secret-sheet">
+            <button class="close" data-close aria-label="Đóng">✕</button>
+            <div class="big-heart">💖</div>
+            <h2 id="secretTitle">Lời nhắn bí mật</h2>
+            <p class="secret-text" id="secretText"></p>
+            <p class="from" id="secretFrom"></p>
+            <button class="btn primary" data-close>Thương lắm 🥰</button>
+        </div>
+    </div>
+
+    <!-- Card creator -->
+    <div class="modal" id="createModal" role="dialog" aria-modal="true" aria-labelledby="createTitle" hidden>
+        <form class="sheet create-sheet" id="createForm">
+            <button class="close" type="button" data-close aria-label="Đóng">✕</button>
+            <h2 id="createTitle">✍️ Tạo thiệp 20/10</h2>
+            <p class="sheet-sub">Người nhận sẽ thấy hộp quà, mở ra là lời chúc và lời nhắn bí mật của bạn.</p>
+
+            <label>Người nhận là
+                <select id="fRel">
+                    <option value="nguoi-yeu">💘 Người yêu</option>
+                    <option value="me">💐 Mẹ</option>
+                    <option value="chi">🎀 Chị gái</option>
+                    <option value="phu-nu">🌸 Bạn bè, đồng nghiệp</option>
+                </select>
+            </label>
+            <div class="row">
+                <label>Tên người nhận
+                    <input id="fTo" maxlength="40" placeholder="VD: Lan, Mẹ yêu" required>
+                </label>
+                <label>Tên của bạn
+                    <input id="fFrom" maxlength="40" placeholder="VD: Tùng">
+                </label>
+            </div>
+            <label>Lời chúc
+                <select id="fWish"></select>
+            </label>
+            <label id="fCustomWrap" hidden>Lời chúc của bạn
+                <textarea id="fCustom" rows="3" maxlength="400" placeholder="Viết lời chúc của bạn..."></textarea>
+            </label>
+            <label>Lời nhắn bí mật <small>(mở khóa sau khi bắt đủ 10 trái tim)</small>
+                <textarea id="fSecret" rows="2" maxlength="300" placeholder="Để trống sẽ dùng lời nhắn có sẵn"></textarea>
+            </label>
+
+            <button class="btn primary wide" type="submit">🎁 Tạo link món quà</button>
+
+            <div class="result" id="result" hidden>
+                <input id="link" readonly>
+                <div class="actions">
+                    <button class="btn primary" type="button" id="shareLink">📤 Gửi ngay</button>
+                    <button class="btn" type="button" id="copyLink">📋 Sao chép</button>
+                    <a class="btn" id="previewLink" target="_blank" rel="noopener">👀 Xem thử</a>
+                </div>
+            </div>
+        </form>
+    </div>
 
     <div class="toast" id="toast" role="status"></div>
 
