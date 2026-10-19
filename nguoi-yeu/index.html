@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#1c050b">
+    <title>Gửi em, 20/10</title>
+    <meta name="description" content="Có một trái tim đang chờ em mở khóa 💞">
+    <meta property="og:title" content="💞 Gửi em, nhân ngày 20/10">
+    <meta property="og:description" content="Giữ ngón tay lên trái tim để mở khóa nhé">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,500;1,700&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=1">
+</head>
+
+<body>
+    <canvas id="sky"></canvas>
+
+    <!-- Intro: press and hold the heart -->
+    <div class="intro" id="intro">
+        <p class="intro-hello" id="introHello">Em ơi,</p>
+        <p class="intro-sub">giữ ngón tay lên trái tim nhé</p>
+        <button class="hold-heart" id="holdHeart" aria-label="Nhấn giữ để mở khóa trái tim">
+            <svg viewBox="0 0 100 90" aria-hidden="true">
+                <defs>
+                    <clipPath id="heartClip">
+                        <path d="M50 86C20 63 3 46 3 27 3 13 14 3 28 3c9 0 17 5 22 13C55 8 63 3 72 3c14 0 25 10 25 24 0 19-17 36-47 59Z" />
+                    </clipPath>
+                    <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#ff8fa8" />
+                        <stop offset="1" stop-color="#e0103f" />
+                    </linearGradient>
+                </defs>
+                <rect id="heartFill" x="0" y="90" width="100" height="0" fill="url(#fillGrad)" clip-path="url(#heartClip)" />
+                <path class="heart-outline" d="M50 86C20 63 3 46 3 27 3 13 14 3 28 3c9 0 17 5 22 13C55 8 63 3 72 3c14 0 25 10 25 24 0 19-17 36-47 59Z" />
+            </svg>
+            <span class="hold-pct" id="holdPct">0%</span>
+        </button>
+        <p class="intro-hint" id="introHint">Nhấn và giữ…</p>
+    </div>
+
+    <button class="sound" id="sound" aria-label="Bật/tắt nhạc" hidden>🔊</button>
+
+    <main class="page">
+        <!-- Hero -->
+        <section class="hero">
+            <p class="eyebrow">20 · 10 · 2026</p>
+            <h1 class="names"><span id="nameEm">Em</span> <span class="beat">❤</span> <span id="nameAnh">Anh</span></h1>
+            <p class="wish" id="wish" aria-live="polite"></p>
+            <p class="scroll-hint">Kéo xuống, còn nhiều bất ngờ lắm ↓</p>
+        </section>
+
+        <!-- Love counter -->
+        <section class="block reveal" id="counterBlock" hidden>
+            <h2>Mình đã bên nhau</h2>
+            <div class="counter">
+                <div><b id="cDays">0</b><span>ngày</span></div>
+                <div><b id="cHours">0</b><span>giờ</span></div>
+                <div><b id="cMins">0</b><span>phút</span></div>
+                <div><b id="cSecs">0</b><span>giây</span></div>
+            </div>
+            <p class="muted" id="since"></p>
+        </section>
+
+        <!-- Jar of reasons -->
+        <section class="block reveal">
+            <h2>Hũ lý do anh yêu em</h2>
+            <p class="muted">Chạm vào hũ để rút một lý do</p>
+            <button class="jar" id="jar" aria-label="Rút một lý do">
+                <span class="jar-lid"></span>
+                <span class="jar-body"><span class="jar-hearts">💗💖💕<br>💞💗💘<br>💖💕💗</span></span>
+            </button>
+            <div class="slip" id="slip" hidden>
+                <p class="slip-no" id="slipNo"></p>
+                <p class="slip-text" id="slipText"></p>
+            </div>
+        </section>
+
+        <!-- Scratch card -->
+        <section class="block reveal">
+            <h2>Phiếu quà bí mật</h2>
+            <p class="muted">Dùng ngón tay cào lớp phủ để xem quà</p>
+            <div class="scratch" id="scratch">
+                <div class="ticket">
+                    <span class="ticket-tag">🎟️ PHIẾU YÊU THƯƠNG</span>
+                    <p class="ticket-text" id="ticketText"></p>
+                    <span class="ticket-foot">Có giá trị vĩnh viễn · Không cần hóa đơn</span>
+                </div>
+                <canvas id="scratchCanvas" aria-label="Lớp phủ cào"></canvas>
+            </div>
+        </section>
+
+        <!-- Playful question -->
+        <section class="block reveal">
+            <h2 id="askTitle">Làm người yêu anh thêm thật nhiều năm nữa nhé?</h2>
+            <div class="ask-emoji" id="askEmoji">🥺</div>
+            <div class="ask-zone" id="askZone">
+                <button class="btn primary" id="yes">Đồng ý 💍</button>
+                <button class="btn" id="no">Không 😤</button>
+            </div>
+            <p class="answer" id="answer" hidden></p>
+        </section>
+
+        <footer class="sign">
+            <p>Yêu em,</p>
+            <p class="sign-name" id="signName">Anh</p>
+        </footer>
+    </main>
+
+    <!-- Creator: sender only, open with #tao-thiep -->
+    <div class="modal" id="createModal" role="dialog" aria-modal="true" aria-labelledby="createTitle" hidden>
+        <form class="sheet" id="createForm">
+            <h2 id="createTitle">💌 Tạo thiệp cho người yêu</h2>
+            <p class="muted">Điền thông tin, tạo link rồi gửi cho em ấy.</p>
+
+            <div class="row">
+                <label>Tên em ấy
+                    <input id="fEm" maxlength="30" placeholder="VD: Lan" required>
+                </label>
+                <label>Tên của anh
+                    <input id="fAnh" maxlength="30" placeholder="VD: Tùng" required>
+                </label>
+            </div>
+            <label>Ngày bắt đầu yêu <small>(để đếm ngày bên nhau)</small>
+                <input id="fDate" type="date">
+            </label>
+            <label>Lời chúc
+                <select id="fWish"></select>
+            </label>
+            <label id="fCustomWrap" hidden>Lời chúc của anh
+                <textarea id="fCustom" rows="3" maxlength="400"></textarea>
+            </label>
+            <label>Quà trong phiếu cào
+                <input id="fGift" maxlength="120" placeholder="VD: 1 buổi hẹn hò, em chọn chỗ, anh bao!">
+            </label>
+            <label>Lý do anh yêu em <small>(mỗi dòng một lý do, để trống dùng có sẵn)</small>
+                <textarea id="fReasons" rows="4" maxlength="1200" placeholder="Vì em cười rất xinh&#10;Vì em luôn nhớ anh thích ăn gì"></textarea>
+            </label>
+
+            <button class="btn primary wide" type="submit">💞 Tạo link</button>
+
+            <div class="result" id="result" hidden>
+                <input id="link" readonly>
+                <div class="actions">
+                    <button class="btn primary" type="button" id="shareLink">📤 Gửi ngay</button>
+                    <button class="btn" type="button" id="copyLink">📋 Sao chép</button>
+                    <a class="btn" id="previewLink" target="_blank" rel="noopener">👀 Xem thử</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="toast" id="toast" role="status"></div>
+
+    <script src="script.js?v=1"></script>
+</body>
+
+</html>
