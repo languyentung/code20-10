@@ -2,101 +2,204 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
 }
+
 :root {
-  --clr: rgb(255, 0, 174);
+  --pink: #ff3fae;
+  --pink-soft: #ff9fd6;
+  --pink-light: #ffe3f3;
+  --gold: #ffe6a8;
+  --text: #fff4fb;
+  --text-dim: rgba(255, 228, 244, 0.75);
 }
+
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  background: #000;
+  min-height: 100svh;
+  overflow: hidden;
+  font-family: "Be Vietnam Pro", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, #3b0f4f 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 50% 100%, #2a0a33 0%, transparent 70%),
+    #07040f;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
 }
-.container {
-  position: relative;
-  top: 100px;
-  height: 400px;
+
+#sky {
+  position: fixed;
+  inset: 0;
   width: 100%;
-  display: flex;
-  justify-content: center;
+  height: 100%;
+  z-index: 0;
 }
-.container .cloud {
+
+.scene {
   position: relative;
-  width: 300px;
-  z-index: 100;
-  filter: drop-shadow(0 0 35px var(--clr));
+  z-index: 1;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  pointer-events: none;
 }
-.container .cloud h2 {
-  position: absolute;
-  color: var(--clr);
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-  color: white;
-  font-size: 2em;
-  z-index: 1000;
-  font-weight: 400;
-  padding: 0 10px;
-  border-radius: 10px;
-  text-transform: uppercase;
-  background: var(--clr);
-}
-.container .cloud h2::before {
-  content: "";
-  position: absolute;
-  top: -115px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 100px;
-  width: 120%;
-  height: 100px;
-  background: var(--clr);
-}
-.container .cloud h2::after {
-  content: "";
-  position: absolute;
-  top: -150px;
-  left: 25px;
-  width: 120px;
+
+/* ---------- Cloud ---------- */
+.cloud-wrap {
+  position: relative;
+  width: 280px;
   height: 120px;
-  border-radius: 50%;
-  background: var(--clr);
-  box-shadow: 120px -30px 0 40px var(--clr);
+  animation: float 6s ease-in-out infinite;
 }
-.container .cloud .drop {
+
+.cloud {
   position: absolute;
-  top: 60px;
-  height: 20px;
-  line-height: 20px;
-  color: var(--clr);
-  transform-origin: bottom;
-  animation: animate 2s linear infinite;
+  inset: 0;
+  z-index: 2;
+  filter:
+    drop-shadow(0 0 18px rgba(255, 63, 174, 0.9))
+    drop-shadow(0 0 50px rgba(255, 63, 174, 0.55));
 }
-@keyframes animate {
-  0% {
-    transform: translateY(0) scaleY(0);
-    transform-origin: top;
-  }
-  10% {
-    transform: translateY(0) scaleY(0.25);
-    transform-origin: top;
-  }
-  20% {
-    transform: translateY(0) scaleY(1);
-  }
-  70% {
-    transform: translateY(300px) scaleY(1);
-    transform-origin: bottom;
-  }
-  80% {
-    transform: translateY(300px) scaleY(1);
-    transform-origin: bottom;
-  }
-  100% {
-    transform: translateY(300px) scaleY(0);
-    transform-origin: bottom;
-    text-shadow: -180px 0 0 var(--clr), 180px 0 0 var(--clr);
-  }
+
+.puff {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, var(--pink-light) 18%, var(--pink-soft) 50%, var(--pink) 100%);
+}
+
+.p1 { width: 120px; height: 120px; left: 30px; top: 0; }
+.p2 { width: 150px; height: 150px; left: 110px; top: -40px; }
+.p3 { width: 90px; height: 90px; left: 0; top: 40px; }
+.p4 {
+  width: 260px; height: 70px; left: 10px; top: 60px;
+  border-radius: 60px;
+  background: linear-gradient(180deg, var(--pink-soft), var(--pink));
+}
+
+/* ---------- Heart rain ---------- */
+.rain {
+  position: absolute;
+  top: 110px;
+  left: 20px;
+  width: 240px;
+  height: 260px;
+  z-index: 1;
+}
+
+.drop {
+  position: absolute;
+  top: 0;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(255, 120, 200, 0.9));
+  animation: fall linear forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes fall {
+  0%   { transform: translate(0, 0) scale(0.2) rotate(0deg); opacity: 0; }
+  10%  { transform: translate(0, 10px) scale(1) rotate(0deg); opacity: 1; }
+  75%  { opacity: 1; }
+  100% { transform: translate(var(--sway), 240px) scale(0.6) rotate(var(--spin)); opacity: 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+/* ---------- Card ---------- */
+.card {
+  position: relative;
+  margin-top: 170px;
+  width: 100%;
+  max-width: 520px;
+  padding: 28px 24px 24px;
+  text-align: center;
+  border-radius: 24px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 200, 235, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(255, 63, 174, 0.08) inset,
+    0 20px 60px rgba(255, 63, 174, 0.18);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+/* light sweep across the glass */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  transform: skewX(-20deg);
+  animation: sweep 5s ease-in-out infinite;
+}
+
+@keyframes sweep {
+  0%, 55% { left: -60%; }
+  100%    { left: 130%; }
+}
+
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  color: var(--gold);
+  text-shadow: 0 0 12px rgba(255, 220, 140, 0.7);
+}
+
+.title {
+  margin: 6px 0 12px;
+  font-family: "Dancing Script", cursive;
+  font-weight: 700;
+  font-size: clamp(2.6rem, 11vw, 4.6rem);
+  line-height: 1.1;
+  background: linear-gradient(90deg, #ffc2e6, #ff4fb3, #fff, #ffd6a0, #ff7cc8, #ffc2e6);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 14px rgba(255, 79, 179, 0.65));
+  animation: shimmer 6s linear infinite;
+}
+
+@keyframes shimmer {
+  to { background-position: 300% 0; }
+}
+
+.msg {
+  font-weight: 300;
+  font-size: clamp(0.95rem, 3.6vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--text-dim);
+  text-wrap: balance;
+}
+
+.hint {
+  margin-top: 18px;
+  font-size: 0.8rem;
+  color: rgba(255, 210, 235, 0.55);
+  animation: blink 2.4s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+
+@media (max-width: 420px) {
+  .cloud-wrap { transform: scale(0.85); }
+  .card { margin-top: 150px; padding: 22px 16px 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud-wrap, .card::before, .title, .hint { animation: none; }
 }
