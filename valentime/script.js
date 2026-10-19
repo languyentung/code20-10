@@ -504,10 +504,83 @@ fWish.addEventListener('change', () => {
     if (fWish.value === 'custom') $('fCustom').focus();
 });
 
+// ---------- Playful question: "No" runs away ----------
+const asks = {
+    'nguoi-yeu': { q: (toName || 'Em') + ' có thương anh không?', a: 'Anh cũng thương em nhất trên đời luôn 💞' },
+    'me': { q: (toName || 'Mẹ') + ' có thương con nhất nhà không?', a: 'Con cũng thương mẹ nhất trên đời luôn 💐' },
+    'chi': { q: (toName || 'Chị') + ' có thương em nhất nhà không?', a: 'Em cũng thương chị nhất, dù hay cãi nhau 🎀' },
+    'phu-nu': { q: (toName ? toName + ' có' : 'Bạn có') + ' thích món quà nhỏ này không?', a: 'Vậy là vui rồi! Chúc bạn 20/10 thật rạng rỡ nhé 🌸' }
+};
+const taunts = ['Chắc chưa? 🤨', 'Nghĩ lại đi mà 🥺', 'Bấm nhầm hả? 😏', 'Bắt được đâu mà bắt 😜', 'Thôi mà… 🥹', 'Đừng mà 😭', 'Không có nút này đâu 😝'];
+const faces = ['🥺', '🤨', '😢', '😏', '🥹', '😭', '🙈'];
+const noBtn = $('no');
+const yesBtn = $('yes');
+let noCount = 0;
+
+function overlapsYes(x, y, w, h) {
+    const r = yesBtn.getBoundingClientRect();
+    return x < r.right + 12 && x + w > r.left - 12 && y < r.bottom + 12 && y + h > r.top - 12;
+}
+
+function runAway(e) {
+    e.preventDefault();
+    if (!noBtn.classList.contains('runaway')) {
+        const r = noBtn.getBoundingClientRect();
+        noBtn.style.left = r.left + 'px';
+        noBtn.style.top = r.top + 'px';
+        noBtn.classList.add('runaway');
+    }
+    noCount++;
+    noBtn.textContent = taunts[(noCount - 1) % taunts.length];
+    $('askEmoji').textContent = faces[noCount % faces.length];
+    yesBtn.style.transform = 'scale(' + Math.min(1 + noCount * 0.12, 1.8) + ')';
+    chime(76 - (noCount % 5));
+
+    const w = noBtn.offsetWidth;
+    const h = noBtn.offsetHeight;
+    const px = e.clientX || innerWidth / 2;
+    const py = e.clientY || innerHeight / 2;
+    let x, y, tries = 0;
+    do {
+        x = 16 + Math.random() * (innerWidth - w - 32);
+        y = 16 + Math.random() * (innerHeight - h - 32);
+        tries++;
+    } while (tries < 30 && (Math.hypot(x + w / 2 - px, y + h / 2 - py) < 160 || overlapsYes(x, y, w, h)));
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+}
+
+noBtn.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && runAway(e));
+noBtn.addEventListener('pointerdown', runAway);
+noBtn.addEventListener('click', runAway);
+
+$('ask').addEventListener('click', () => {
+    noCount = 0;
+    noBtn.classList.remove('runaway');
+    noBtn.style.left = noBtn.style.top = '';
+    noBtn.textContent = 'Không 😤';
+    yesBtn.style.transform = '';
+    $('askEmoji').textContent = '🥺';
+    $('askTitle').textContent = asks[current].q;
+    $('askStage').hidden = false;
+    $('answerStage').hidden = true;
+    openModal($('askModal'));
+});
+
+yesBtn.addEventListener('click', () => {
+    const r = yesBtn.getBoundingClientRect();
+    burstHearts(r.left + r.width / 2, r.top + r.height / 2);
+    $('askStage').hidden = true;
+    $('answerStage').hidden = false;
+    typeText($('answerText'), asks[current].a);
+    celebrate(8);
+});
+
 // the creator is only for senders: open it with …/valentime/#tao-thiep
 if (hash === 'tao-thiep') {
     gift.hidden = true;
     $('secret').hidden = true;
+    $('ask').hidden = true;
     fRel.value = 'nguoi-yeu';
     fillWishOptions();
     render(false);

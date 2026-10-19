@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=7">
 </head>
 
 <body>
@@ -59,6 +59,7 @@
 
             <div class="actions">
                 <button class="btn primary" id="secret">💌 Bạn có 1 lời nhắn bí mật</button>
+                <button class="btn" id="ask">🤭 Trả lời câu hỏi này đã</button>
                 <button class="btn" id="next">🔄 Lời chúc khác</button>
             </div>
 
@@ -92,7 +93,30 @@
         </div>
     </div>
 
-    <!-- Card creator -->
+    <!-- Playful question: the "No" button runs away -->
+    <div class="modal" id="askModal" role="dialog" aria-modal="true" aria-labelledby="askTitle" hidden>
+        <div class="sheet ask-sheet">
+            <button class="close" data-close aria-label="Đóng">✕</button>
+
+            <div id="askStage">
+                <div class="ask-emoji" id="askEmoji">🥺</div>
+                <h2 id="askTitle"></h2>
+                <div class="ask-zone">
+                    <button class="btn primary" id="yes">Có 💖</button>
+                    <button class="btn" id="no">Không 😤</button>
+                </div>
+            </div>
+
+            <div id="answerStage" hidden>
+                <div class="big-heart">🥰</div>
+                <h2>Biết ngay mà!</h2>
+                <p class="secret-text" id="answerText"></p>
+                <button class="btn primary" data-close>Hihi 😘</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card creator (sender only: open with #tao-thiep) -->
     <div class="modal" id="createModal" role="dialog" aria-modal="true" aria-labelledby="createTitle" hidden>
         <form class="sheet create-sheet" id="createForm">
             <button class="close" type="button" data-close aria-label="Đóng">✕</button>
@@ -140,7 +164,7 @@
 
     <div class="toast" id="toast" role="status"></div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=7"></script>
 </body>
 
 </html>
