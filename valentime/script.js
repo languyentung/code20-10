@@ -96,17 +96,21 @@ const toEl = $('to');
 const msgEl = $('msg');
 const tabs = document.querySelectorAll('.tab');
 
-if (personal) card.classList.add('personal');
-if (customWish) $('next').hidden = true;
+// recipient view: just the wish, the sender's secret (if any) and the sky to play with
+if (personal) {
+    card.classList.add('personal');
+    $('next').hidden = true;
+    $('create').hidden = true;
+    $('secret').hidden = !customSecret;
+}
 $('from').textContent = fromName ? '— ' + fromName + ' —' : '';
 
 function heading() {
     return toName ? 'Gửi ' + toName + ' 💖' : wishes[current].to;
 }
 
-let typeTimer;
 function typeText(el, text) {
-    clearInterval(typeTimer);
+    clearInterval(el.typeTimer);
     if (reduceMotion) {
         el.textContent = text;
         return;
@@ -115,10 +119,10 @@ function typeText(el, text) {
     let i = 0;
     el.textContent = '';
     el.classList.add('typing');
-    typeTimer = setInterval(() => {
+    el.typeTimer = setInterval(() => {
         el.textContent += chars[i++];
         if (i >= chars.length) {
-            clearInterval(typeTimer);
+            clearInterval(el.typeTimer);
             el.classList.remove('typing');
         }
     }, 38);
@@ -336,7 +340,7 @@ window.addEventListener('pointermove', (e) => {
     spawnSparkles(e.clientX, e.clientY, 2);
 });
 window.addEventListener('pointerdown', (e) => {
-    if (e.target.closest('.modal, .gift-screen, .float-heart')) return;
+    if (e.target.closest('.modal, .gift-screen')) return;
     burstHearts(e.clientX, e.clientY);
 });
 window.addEventListener('resize', resize);
@@ -449,59 +453,30 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') document.querySelectorAll('.modal:not([hidden])').forEach(closeModal);
 });
 
-// ---------- Catch-hearts game -> secret message ----------
-const game = $('game');
-const GOAL = 10;
-const scale = [72, 74, 76, 79, 81, 84, 86, 88, 91, 93];
-let caught = 0;
-let spawnTimer = null;
+// ---------- Secret message: tap the envelope ----------
+const envelope = $('envelope');
 
-function spawnFloatHeart() {
-    const h = document.createElement('button');
-    h.className = 'float-heart';
-    h.setAttribute('aria-label', 'Bắt trái tim');
-    h.textContent = ['💖', '💗', '💘', '💝', '💕'][Math.floor(Math.random() * 5)];
-    h.style.left = 4 + Math.random() * 80 + '%';
-    h.style.animationDuration = (reduceMotion ? 9 : 5 + Math.random() * 3) + 's';
-    h.style.setProperty('--sway', (Math.random() - 0.5) * 80 + 'px');
-    h.addEventListener('animationend', () => h.remove());
-    h.addEventListener('pointerdown', (e) => {
-        e.stopPropagation();
-        if (h.classList.contains('pop')) return;
-        const r = h.getBoundingClientRect();
-        h.classList.add('pop');
-        burstHearts(r.left + r.width / 2, r.top + r.height / 2);
-        chime(scale[caught % scale.length]);
-        caught++;
-        $('caught').textContent = caught;
-        if (caught >= GOAL) finishGame();
-    });
-    game.appendChild(h);
-}
+$('secret').addEventListener('click', () => {
+    envelope.classList.remove('open');
+    $('envStage').hidden = false;
+    $('letterStage').hidden = true;
+    openModal($('secretModal'));
+    envelope.focus();
+});
 
-function startGame() {
-    caught = 0;
-    $('caught').textContent = 0;
-    game.hidden = false;
-    document.body.classList.add('playing');
-    for (let i = 0; i < 3; i++) setTimeout(spawnFloatHeart, i * 250);
-    spawnTimer = setInterval(spawnFloatHeart, 600);
-}
-
-function finishGame() {
-    clearInterval(spawnTimer);
+envelope.addEventListener('click', () => {
+    if (envelope.classList.contains('open')) return;
+    envelope.classList.add('open');
+    chime(84);
+    setTimeout(() => chime(88), 150);
     setTimeout(() => {
-        game.querySelectorAll('.float-heart').forEach((h) => h.remove());
-        game.hidden = true;
-        document.body.classList.remove('playing');
-        celebrate(8);
-        $('secretText').textContent = customSecret || wishes[current].secret;
+        $('envStage').hidden = true;
+        $('letterStage').hidden = false;
         $('secretFrom').textContent = fromName ? '— ' + fromName + ' —' : '';
-        openModal($('secretModal'));
-    }, 400);
-}
-
-$('secret').addEventListener('click', startGame);
+        typeText($('secretText'), customSecret || wishes[current].secret);
+        celebrate(5);
+    }, reduceMotion ? 200 : 1000);
+});
 
 // ---------- Card creator ----------
 const fRel = $('fRel');

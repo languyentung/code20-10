@@ -288,7 +288,8 @@ body {
 .tab:focus-visible,
 .btn:focus-visible,
 .close:focus-visible,
-.sound:focus-visible {
+.sound:focus-visible,
+.envelope:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
@@ -480,71 +481,104 @@ body {
   cursor: pointer;
 }
 
-/* ---------- Catch-hearts game ---------- */
-.game {
-  position: fixed;
-  inset: 0;
-  z-index: 12;
-  overflow: hidden;
-  pointer-events: none;
+/* ---------- Secret button & envelope ---------- */
+.card.personal #secret {
+  animation: glow 1.8s ease-in-out infinite;
 }
 
-.game-hud {
-  position: absolute;
-  top: max(18px, env(safe-area-inset-top));
-  left: 50%;
-  translate: -50% 0;
-  padding: 8px 18px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  background: rgba(40, 10, 40, 0.75);
-  border: 1px solid rgba(255, 200, 235, 0.3);
+@keyframes glow {
+  0%, 100% { box-shadow: 0 6px 24px rgba(255, 63, 174, 0.45); transform: scale(1); }
+  50%      { box-shadow: 0 0 36px rgba(255, 63, 174, 0.9); transform: scale(1.03); }
 }
 
-.game-tip {
-  position: absolute;
-  top: calc(max(18px, env(safe-area-inset-top)) + 52px);
-  left: 0;
-  right: 0;
-  padding: 0 16px;
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--text-dim);
-}
-
-.float-heart {
-  position: absolute;
-  bottom: -70px;
-  width: 64px;
-  height: 64px;
+.envelope {
+  position: relative;
+  display: block;
+  width: 240px;
+  height: 160px;
+  margin: 70px auto 14px;
   border: 0;
   background: none;
-  font-size: 2.6rem;
-  line-height: 1;
   cursor: pointer;
-  pointer-events: auto;
-  filter: drop-shadow(0 0 10px rgba(255, 80, 180, 0.9));
-  animation: rise linear forwards;
+  perspective: 700px;
+  filter: drop-shadow(0 0 24px rgba(255, 63, 174, 0.55));
+  animation: wiggle 2.4s ease-in-out infinite;
 }
 
-.float-heart.pop {
-  animation: pop 0.35s ease-out forwards;
+.envelope > span {
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 
-@keyframes rise {
-  0%   { transform: translate(0, 0); }
-  25%  { transform: translate(var(--sway), -28vh); }
-  50%  { transform: translate(calc(var(--sway) * -1), -56vh); }
-  75%  { transform: translate(var(--sway), -84vh); }
-  100% { transform: translate(0, calc(-100vh - 140px)); }
+.env-back {
+  top: 0;
+  bottom: 0;
+  border-radius: 10px;
+  background: linear-gradient(160deg, #ff9fd6, #d81b84);
 }
 
-@keyframes pop {
-  to { transform: scale(1.8); opacity: 0; }
+.env-letter {
+  top: 12px;
+  height: 130px;
+  margin: 0 14px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 14px;
+  border-radius: 6px;
+  font-size: 2rem;
+  background: #fff4fb;
+  transition: transform 0.6s ease 0.35s;
 }
 
-body.playing .card { opacity: 0.25; transition: opacity 0.4s; }
+.env-front {
+  top: 0;
+  bottom: 0;
+  border-radius: 10px;
+  background: linear-gradient(160deg, #ff7cc8, #e0218a);
+  clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
+}
+
+.env-flap {
+  top: 0;
+  height: 58%;
+  border-radius: 10px 10px 0 0;
+  background: linear-gradient(180deg, #ffc2e6, #ff6cc0);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top;
+  transition: transform 0.5s ease;
+}
+
+.env-seal {
+  top: 70px;
+  left: 50% !important;
+  right: auto !important;
+  width: 38px;
+  height: 38px;
+  translate: -50% 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  color: #fff;
+  background: radial-gradient(circle at 35% 30%, #ff6b9a, #b3104f);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  transition: opacity 0.3s, scale 0.3s;
+}
+
+.envelope.open { animation: none; }
+.envelope.open .env-seal { opacity: 0; scale: 1.6; }
+.envelope.open .env-flap { transform: rotateX(180deg); z-index: -1; }
+.envelope.open .env-letter { transform: translateY(-80px); }
+
+.env-hint {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  animation: blink 2s ease-in-out infinite;
+}
+
+#letterStage { animation: up 0.5s cubic-bezier(.2, .9, .3, 1.2); }
 
 /* ---------- Modals ---------- */
 .modal {
@@ -754,5 +788,5 @@ a.btn {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cloud-wrap, .card::before, .title, .hint, .gift-box, .big-heart, .modal, .sheet { animation: none; }
+  .cloud-wrap, .card::before, .title, .hint, .gift-box, .big-heart, .modal, .sheet, .envelope, #letterStage, .card.personal #secret { animation: none; }
 }

@@ -58,7 +58,7 @@
             <p class="from" id="from"></p>
 
             <div class="actions">
-                <button class="btn primary" id="secret">💌 Mở lời nhắn bí mật</button>
+                <button class="btn primary" id="secret">💌 Bạn có 1 lời nhắn bí mật</button>
                 <button class="btn" id="next">🔄 Lời chúc khác</button>
                 <button class="btn" id="create">✍️ Tạo thiệp gửi người thương</button>
             </div>
@@ -67,21 +67,29 @@
         </section>
     </main>
 
-    <!-- Catch-hearts game -->
-    <div class="game" id="game" hidden>
-        <p class="game-hud"><span id="caught">0</span> / 10 💘</p>
-        <p class="game-tip">Bắt đủ 10 trái tim để mở lời nhắn bí mật</p>
-    </div>
-
-    <!-- Secret message -->
+    <!-- Secret message: tap the envelope to open -->
     <div class="modal" id="secretModal" role="dialog" aria-modal="true" aria-labelledby="secretTitle" hidden>
         <div class="sheet secret-sheet">
             <button class="close" data-close aria-label="Đóng">✕</button>
-            <div class="big-heart">💖</div>
-            <h2 id="secretTitle">Lời nhắn bí mật</h2>
-            <p class="secret-text" id="secretText"></p>
-            <p class="from" id="secretFrom"></p>
-            <button class="btn primary" data-close>Thương lắm 🥰</button>
+
+            <div id="envStage">
+                <h2 id="secretTitle">Lời nhắn bí mật</h2>
+                <button class="envelope" id="envelope" aria-label="Mở phong thư">
+                    <span class="env-back"></span>
+                    <span class="env-letter">💖</span>
+                    <span class="env-front"></span>
+                    <span class="env-flap"></span>
+                    <span class="env-seal">❤</span>
+                </button>
+                <p class="env-hint">Chạm vào phong thư để mở</p>
+            </div>
+
+            <div id="letterStage" hidden>
+                <div class="big-heart">💖</div>
+                <p class="secret-text" id="secretText"></p>
+                <p class="from" id="secretFrom"></p>
+                <button class="btn primary" data-close>Thương lắm 🥰</button>
+            </div>
         </div>
     </div>
 
@@ -90,7 +98,7 @@
         <form class="sheet create-sheet" id="createForm">
             <button class="close" type="button" data-close aria-label="Đóng">✕</button>
             <h2 id="createTitle">✍️ Tạo thiệp 20/10</h2>
-            <p class="sheet-sub">Người nhận sẽ thấy hộp quà, mở ra là lời chúc và lời nhắn bí mật của bạn.</p>
+            <p class="sheet-sub">Người nhận sẽ thấy hộp quà, mở ra là lời chúc của bạn, kèm phong thư bí mật nếu bạn có viết.</p>
 
             <label>Người nhận là
                 <select id="fRel">
@@ -114,8 +122,8 @@
             <label id="fCustomWrap" hidden>Lời chúc của bạn
                 <textarea id="fCustom" rows="3" maxlength="400" placeholder="Viết lời chúc của bạn..."></textarea>
             </label>
-            <label>Lời nhắn bí mật <small>(mở khóa sau khi bắt đủ 10 trái tim)</small>
-                <textarea id="fSecret" rows="2" maxlength="300" placeholder="Để trống sẽ dùng lời nhắn có sẵn"></textarea>
+            <label>Lời nhắn bí mật <small>(không bắt buộc, người nhận chạm phong thư để mở)</small>
+                <textarea id="fSecret" rows="2" maxlength="300" placeholder="Điều bạn muốn nói riêng với người ấy..."></textarea>
             </label>
 
             <button class="btn primary wide" type="submit">🎁 Tạo link món quà</button>
