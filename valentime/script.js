@@ -100,7 +100,6 @@ const tabs = document.querySelectorAll('.tab');
 if (personal) {
     card.classList.add('personal');
     $('next').hidden = true;
-    $('create').hidden = true;
     $('secret').hidden = !customSecret;
 }
 $('from').textContent = fromName ? '— ' + fromName + ' —' : '';
@@ -505,12 +504,15 @@ fWish.addEventListener('change', () => {
     if (fWish.value === 'custom') $('fCustom').focus();
 });
 
-$('create').addEventListener('click', () => {
-    fRel.value = current;
+// the creator is only for senders: open it with …/valentime/#tao-thiep
+if (hash === 'tao-thiep') {
+    gift.hidden = true;
+    $('secret').hidden = true;
+    fRel.value = 'nguoi-yeu';
     fillWishOptions();
-    $('result').hidden = true;
+    render(false);
     openModal($('createModal'));
-});
+}
 
 $('createForm').addEventListener('submit', (e) => {
     e.preventDefault();
